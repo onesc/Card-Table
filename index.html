@@ -6,14 +6,19 @@
   </head>
   <body>
 
-  <div id ="chatbox">
+    <div id = "app-wrapper">
+        <div id = "canvas-container">
+            <canvas id = "myCanvas"/>
+        </div>
 
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-</div>
-
+        <div id ="chatbox">
+          <ul id="messages"></ul>
+          <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+          </form>
+        </div>
+    </div>
+    
   </body>
 
 <script src="/socket.io/socket.io.js"></script>
