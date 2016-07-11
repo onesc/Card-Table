@@ -4,7 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.use(express.static('public'));
-// 
+//
 // app.use('/images', express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
@@ -14,6 +14,10 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
+  });
+
+  socket.on('card movement', function(data){
+    io.emit('card movement', data);
   });
 });
 

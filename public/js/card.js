@@ -3,7 +3,6 @@
 function initDeck () {
   var imageDir = '/images/cards/';
   var deck = [];
-
   for (var i = 1; i <= 14; i++) {
       var card = {};
       if (i <= 10) {
@@ -116,9 +115,6 @@ function drawCard(deck) {
   card = deck.pop();
   return card;
 }
-
-
-
 
 
 var deck = initDeck();
