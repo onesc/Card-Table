@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <form action="">
+    <input id="m" autocomplete="off" /><button>Send</button>
+  </form>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+var socket = io();
+  $("form").submit(function(){
+    socket.emit('generate room', $('#m').val());
+    return false;
+  });
+
+  socket.on('redirect to room', function(path){
+  window.location.replace(path);
+  });
+</script>
+</html>
