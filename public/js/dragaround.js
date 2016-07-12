@@ -4,6 +4,7 @@ canvas.width = 1500;
 canvas.height = 900;
 var cards = [];
 
+console.log(window.location.pathname);
 
 var mouseX = 0, mouseY = 0;
 var mousePressed = false;
@@ -16,7 +17,7 @@ $(document).mousedown(function(){
     mousePressed = true;
 }).mouseup(function(){
     mousePressed = false;
-    socket.emit('card movement', {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id});
+    socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id});
     itemBeingDragged = false;
 });
 
