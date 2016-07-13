@@ -1,20 +1,59 @@
+deck = [];
+cards = [];
+socket.emit('request game state', window.location.pathname);
+socket.on('load state', function(state, roomdeck){
+  console.log("deck returned " + roomdeck);
+  roomdeck.forEach(function(deckCard){
+    deck = roomdeck;
+  });
+  state.forEach(function(card){
+    var newCard = new DragImage(card.permSrc, card.x, card.y, card.faceDown, card.id);
+    cards.push(newCard);
+  });
+});
 
-var cards = [];
+socket.on('card movement', function(data){
+  console.log(data);
+  cards.forEach(function(card){
+    if (card.id == data.id) {
+      card.x = data.x;
+      card.y = data.y;
+      if (data.shiftDown) {
+        if(card.faceDown) {
+          card.img.src = card.permSrc;
+          card.faceDown = false;
+        } else {
+          card.img.src = "/images/cardback.jpg";
+          card.faceDown = true;
+        }
+      }
+    }
+  });
+});
 
-var card = new DragImage('/images/ace.png', 300, 50);
-cards.push(card);
-var card = new DragImage('https://i.ytimg.com/vi/5UTWBLOuW8s/hqdefault.jpg?custom=true&w=320&h=180&stc=true&jpg444=true&jpgq=90&sp=68&sigh=kZ_jfTgIkbVzZDOBFI8gXRlsTQE', 400, 200);
-cards.push(card);
+socket.on('draw new card', function(card){
+  console.log("got inside draw new card client");
+  var cardToDraw = new DragImage(card[0], card[1], card[2], card[3], card[4]);
+  cards.push(cardToDraw);
+});
+
+
+
+function shuffle(deck){
+    for(var j, x, i = deck.length; i; j = parseInt(Math.random() * i), x = deck[--i], deck[i] = deck[j], deck[j] = x) ;
+    return deck;
+}
 
 function drawCard(deck) {
   card = deck.pop();
   return card;
 }
 
-function cardToHand() {
+function cardToHand(deck) {
   var newCard = drawCard(deck);
-  var card = new DragImage(newCard.src, 300, 300);
-  cards.push(card);
+  var card = [newCard.src, 300, 300, true, cards.length + 1];
+  socket.emit('draw new card', window.location.pathname, card);
+  socket.emit('store game state', window.location.pathname, cards, deck);
 }
 
 var handLine = new Image();

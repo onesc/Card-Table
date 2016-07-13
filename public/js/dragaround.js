@@ -1,8 +1,7 @@
 var canvas = $("#c");
 var c = canvas[0].getContext("2d");
-c.width = 1500;
-c.height = 900;
-var cards = [];
+canvas.width = 1500;
+canvas.height = 900;
 
 console.log(window.location.pathname);
 
@@ -17,17 +16,18 @@ $(document).mousedown(function(){
     mousePressed = true;
   }).mouseup(function(){
     mousePressed = false;
-    if (shiftDown) {
-      if(itemBeingDragged.faceDown) {
-          itemBeingDragged.img.src = itemBeingDragged.permSrc;
-          itemBeingDragged.faceDown = false;
-      } else {
-          itemBeingDragged.img.src = "/images/cardback.jpg";
-          itemBeingDragged.faceDown = true;
-      }
-    }
-
-    socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id});
+    // if (shiftDown) {
+    //   if(itemBeingDragged.faceDown) {
+    //       // itemBeingDragged.img.src = itemBeingDragged.permSrc;
+    //       itemBeingDragged.faceDown = false;
+    //   } else {
+    //       // itemBeingDragged.img.src = "/images/cardback.jpg";
+    //       itemBeingDragged.faceDown = true;
+    //   }
+    // }
+    socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id, shiftDown: shiftDown});
+    console.log("trying to send" + deck);
+    socket.emit('store game state', window.location.pathname, cards, deck);
     itemBeingDragged = false;
 });
 var itemBeingDragged = false;
@@ -46,15 +46,15 @@ $(document).keyup(function (e) {
 });
 
 
-function DragImage(src, x, y) {
+function DragImage(src, x, y, faceDown, id) {
 
     var that = this;
     var startX = 0, startY = 0;
     var drag = false;
     this.x = x;
     this.y = y;
-    this.id = cards.length;
-    this.faceDown = false;
+    this.id = id;
+    this.faceDown = faceDown;
 
 
     var img = new Image();
@@ -70,13 +70,6 @@ function DragImage(src, x, y) {
             var right = that.x + img.width;
             var top = that.y;
             var bottom = that.y + img.height;
-            // console.log("-----------------------");
-            // console.log('right: ' + right);
-            // console.log('mouseX: ' + mouseX);
-            // console.log('bottom: ' + bottom);
-            // console.log('mouseY: ' + mouseY);
-            // console.log('width: ' + that.width);
-            // console.log('height: ' + that.height);
             if (!drag){
               startX = mouseX - that.x;
               startY = mouseY - that.y;

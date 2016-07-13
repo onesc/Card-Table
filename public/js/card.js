@@ -30,7 +30,7 @@ function initDeck () {
 
   for (var i = 1; i <= 14; i++) {
       var card = {};
-      if (i < 10) {
+      if (i <= 10) {
         card.name = i + ' of Spades';
         card.src = imageDir + i + '_of_spades.png';
       deck.push(card);
@@ -55,7 +55,7 @@ function initDeck () {
 
   for (var i = 1; i <= 14; i++) {
     var card = {};
-      if (i < 10) {
+      if (i <= 10) {
         card.name = i + ' of Clubs';
         card.src = imageDir + i + '_of_clubs.png';
       deck.push(card);
@@ -80,7 +80,7 @@ function initDeck () {
 
   for (var i = 1; i <= 14; i++) {
     var card = {};
-      if (i < 10) {
+      if (i <= 10) {
       card.name = i + ' of Diamonds';
       card.src = imageDir + i + '_of_diamonds.png'
       deck.push(card);
@@ -104,18 +104,3 @@ function initDeck () {
   }
   return deck;
   }
-
-
-function shuffle(deck){
-    for(var j, x, i = deck.length; i; j = parseInt(Math.random() * i), x = deck[--i], deck[i] = deck[j], deck[j] = x) ;
-    return deck;
-}
-
-function drawCard(deck) {
-  card = deck.pop();
-  return card;
-}
-
-
-var deck = initDeck();
-console.log(deck);

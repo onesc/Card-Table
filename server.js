@@ -13,14 +13,6 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/test', function(req, res, next){
-
-  res.sendFile(__dirname + '/test.html');
-});
-
-app.get('/meme', function(req, res) {
-  res.sendFile(__dirname + '/meme.html');
-});
 
 
 
@@ -61,9 +53,40 @@ io.on('connection', function(socket){
   socket.on('card movement', function(path, data){
     io.sockets.in(path).emit('card movement', data);
   });
+
+  socket.on('draw new card', function(path, card){
+    console.log("got inside draw new card on server side");
+    console.log(card);
+    console.log(path);
+    io.sockets.in(path).emit('draw new card', card);
+  });
+
   socket.on('player join', function(path, username){
     io.sockets.in(path).emit('player join', username);
   });
+
+  socket.on('store game state', function(path, state, deck){
+    rooms.forEach(function(room){
+      if (room.path == path){
+        room.state = state;
+        room.deck = deck;
+      }
+      console.log(room);
+    });
+  });
+
+    socket.on('request game state', function(path){
+      var stateToGive;
+      var deckToGive;
+      rooms.forEach(function(room){
+        if (room.path == path){
+          stateToGive = room.state;
+          deckToGive = room.deck;
+        }
+      });
+      console.log('request game state gave back ' + stateToGive);
+      io.sockets.in(path).emit('load state', stateToGive, deckToGive);
+    });
 
   socket.on('disconnect', function() {
     io.sockets.in(socket.roomname).emit('chat message', socket.user + " has left the room");
@@ -87,9 +110,9 @@ http.listen(3000, function(){
 function generateRoom() {
   var randString = Math.random().toString(36).substring(7);
   app.get('/' + randString,function(req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/table.html');
   });
-  rooms.push({path: '/' + randString, users: []});
+  rooms.push({path: '/' + randString, users: [], state: [], deck: []});
   io.emit('redirect to room', randString);
   return randString;
 }

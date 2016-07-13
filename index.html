@@ -1,32 +1,26 @@
-<!doctype html>
-<html>
-  <head>
-  <title>Card Table</title>
-<link rel="stylesheet" href="/css/style.css" media="screen" title="no title" charset="utf-8">
-  </head>
-  <body>
-
-    <div id = "app-wrapper">
-        <div id = "canvas-container">
-            <canvas id="c" width = "1500" height = "900" ></canvas>
-        </div>
-
-        <div id ="chatbox">
-          <ul id="messages"></ul>
-          <form action="">
-            <input id="m" autocomplete="off" /><button>Send</button>
-          </form>
-        </div>
-    </div>
-
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <form action="">
+    <input id="m" autocomplete="off" /><button>Send</button>
+  </form>
+</body>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script src="/js/room.js" charset="utf-8"></script>
-<script src="/js/card.js" charset="utf-8"></script>
-<script src="/js/dragaround.js"></script>
-<script src="/js/canvas.js" charset="utf-8"></script>
+<script>
+var socket = io();
+  $("form").submit(function(){
+    socket.emit('generate room', $('#m').val());
+    return false;
+  });
 
-
+  socket.on('redirect to room', function(path){
+    window.location.replace(path);
+  });
+</script>
 </html>

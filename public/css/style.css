@@ -18,6 +18,10 @@ background-color: pink;
 #canvas-container {
    flex: 1;
 }
+
+#playerHand {
+  height: 200px
+}
 /*
 canvas {
   height: 100%;
