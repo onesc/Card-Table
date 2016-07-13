@@ -21,6 +21,9 @@ socket.on('player join', function(username){
 socket.emit('player join', window.location.pathname, username);
 socket.emit('join room', window.location.pathname, username);
 
+socket.on('disconnect', function(){
+  socket.emit('user left');
+});
 
 $('form').submit(function(){
   socket.emit('chat message', window.location.pathname, (username + ": " +  $('#m').val()));

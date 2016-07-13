@@ -1,7 +1,7 @@
 var canvas = $("#c");
 var c = canvas[0].getContext("2d");
-canvas.width = 1500;
-canvas.height = 900;
+c.width = 1500;
+c.height = 900;
 var cards = [];
 
 console.log(window.location.pathname);
@@ -15,13 +15,36 @@ canvas.mousemove(function(e) {
 
 $(document).mousedown(function(){
     mousePressed = true;
-}).mouseup(function(){
+  }).mouseup(function(){
     mousePressed = false;
+    if (shiftDown) {
+      if(itemBeingDragged.faceDown) {
+          itemBeingDragged.img.src = itemBeingDragged.permSrc;
+          itemBeingDragged.faceDown = false;
+      } else {
+          itemBeingDragged.img.src = "/images/cardback.jpg";
+          itemBeingDragged.faceDown = true;
+      }
+    }
+
     socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id});
     itemBeingDragged = false;
 });
-
 var itemBeingDragged = false;
+var shiftDown = false;
+
+$(document).keydown(function (e) {
+    if (e.keyCode == 16) {
+      shiftDown = true;
+    }
+});
+
+$(document).keyup(function (e) {
+    if (e.keyCode == 16) {
+      shiftDown = false;
+    }
+});
+
 
 function DragImage(src, x, y) {
 
@@ -31,10 +54,15 @@ function DragImage(src, x, y) {
     this.x = x;
     this.y = y;
     this.id = cards.length;
-    this.width = 150;
-    this.height = 240;
+    this.faceDown = false;
+
+
     var img = new Image();
+    this.img = img;
+    img.width = 150;
+    img.height = 240;
     img.src = src;
+    this.permSrc = src;
 
     this.update = function() {
         if (mousePressed){
@@ -42,6 +70,13 @@ function DragImage(src, x, y) {
             var right = that.x + img.width;
             var top = that.y;
             var bottom = that.y + img.height;
+            // console.log("-----------------------");
+            // console.log('right: ' + right);
+            // console.log('mouseX: ' + mouseX);
+            // console.log('bottom: ' + bottom);
+            // console.log('mouseY: ' + mouseY);
+            // console.log('width: ' + that.width);
+            // console.log('height: ' + that.height);
             if (!drag){
               startX = mouseX - that.x;
               startY = mouseY - that.y;
@@ -58,13 +93,13 @@ function DragImage(src, x, y) {
             that.y = mouseY - startY;
               if (mouseY > (canvas.height * 0.8)) {
                 that.y = canvas.height * 0.83;
-                that.width = 100;
-                that.height = 140;
+                img.width = 100;
+                img.height = 140;
               } else {
-                that.width = 150;
-                that.height = 240;
+                img.width = 150;
+                img.height = 240;
               }
         }
-        c.drawImage(img, that.x, that.y, that.width, that.height);
+        c.drawImage(img, that.x, that.y, img.width, img.height);
     }
 }

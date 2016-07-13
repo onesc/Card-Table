@@ -4,6 +4,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var NodeCache = require( "node-cache" );
 var rooms = [];
+var userid = 0;
+
 
 app.use(express.static('public'));
 
@@ -26,13 +28,22 @@ app.get('/meme', function(req, res) {
 io.on('connection', function(socket){
   console.log("CONNECTION MADE");
 
-  socket.on("some event", function () {
-    console.log("ALL USERS IN ROOM 1 SHOULD SEE THIS");
-  });
 
   socket.on('join room', function(roomname, username){
+    socket.user = username;
+    socket.roomname = roomname;
+    socket.userid = userid + 1;
+    userid += 1;
     socket.join(roomname);
-    console.log(username + ' joined ' + roomname);
+    rooms.forEach(function(room){
+      if(room.path == roomname) {
+        room.users.push({name: username, id: socket.userid});
+      }
+    });
+    console.log(socket.user + ' joined ' + roomname);
+    rooms.forEach(function(room){
+      console.log(room);
+    });
   });
 
   socket.on('say to room', function(path){
@@ -43,17 +54,28 @@ io.on('connection', function(socket){
       generateRoom();
   });
 
-
-
   socket.on('chat message', function(path, msg){
     io.sockets.in(path).emit('chat message', msg);
   });
 
   socket.on('card movement', function(path, data){
-  io.sockets.in(path).emit('card movement', data);
+    io.sockets.in(path).emit('card movement', data);
   });
   socket.on('player join', function(path, username){
     io.sockets.in(path).emit('player join', username);
+  });
+
+  socket.on('disconnect', function() {
+    io.sockets.in(socket.roomname).emit('chat message', socket.user + " has left the room");
+    rooms.forEach(function(room){
+      if (socket.roomname == room.path) {
+        room.users = room.users.filter(function(el){
+          return el.id !== socket.userid;
+        });
+        console.log(room.users.length + " users in " + socket.roomname);
+        }
+      });
+    console.log(socket.user + " left " + socket.roomname);
   });
 
 });
@@ -67,7 +89,7 @@ function generateRoom() {
   app.get('/' + randString,function(req, res) {
     res.sendFile(__dirname + '/index.html');
   });
-  rooms.push({path: '/' + randString});
+  rooms.push({path: '/' + randString, users: []});
   io.emit('redirect to room', randString);
   return randString;
 }
