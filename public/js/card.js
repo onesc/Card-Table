@@ -6,22 +6,22 @@ function initDeck () {
   for (var i = 2; i <= 14; i++) {
       var card = {};
       if (i <= 10) {
-      card.name = i + ' of Hearts';
+      card.cardname = i + ' of Hearts';
       card.src = imageDir + i + '_of_hearts.png';
       deck.push(card);
     } else {
       var card = {};
       if (i == 11) {
-        card.name = "Jack of Hearts";
+        card.cardname = "Jack of Hearts";
         card.src = imageDir + 'jack_of_hearts.png';
       } else if (i == 12) {
-        card.name = "Queen of Hearts";
+        card.cardname = "Queen of Hearts";
           card.src = imageDir + 'queen_of_hearts.png';
       } else if (i == 13) {
-        card.name = "King of Hearts";
+        card.cardname = "King of Hearts";
           card.src = imageDir + 'king_of_hearts.png';
       } else if (i == 14) {
-        card.name = "Ace of Hearts";
+        card.cardname = "Ace of Hearts";
           card.src = imageDir + 'ace_of_hearts.png';
       }
       deck.push(card);
@@ -31,22 +31,22 @@ function initDeck () {
   for (var i = 2; i <= 14; i++) {
       var card = {};
       if (i <= 10) {
-        card.name = i + ' of Spades';
+        card.cardname = i + ' of Spades';
         card.src = imageDir + i + '_of_spades.png';
       deck.push(card);
     } else {
       var card = {};
       if (i == 11) {
-        card.name = "Jack of Spades";
+        card.cardname = "Jack of Spades";
         card.src = imageDir + "jack_of_spades.png";
       } else if (i == 12) {
-        card.name = "Queen of Spades";
+        card.cardname = "Queen of Spades";
         card.src = imageDir + "queen_of_spades.png";
       } else if (i == 13) {
-        card.name = "King of Spades";
+        card.cardname = "King of Spades";
         card.src = imageDir + "king_of_spades.png";
       } else if (i == 14) {
-        card.name = "Ace of Spades";
+        card.cardname = "Ace of Spades";
         card.src = imageDir + "ace_of_spades.png";
       }
       deck.push(card);
@@ -56,22 +56,22 @@ function initDeck () {
   for (var i = 2; i <= 14; i++) {
     var card = {};
       if (i <= 10) {
-        card.name = i + ' of Clubs';
+        card.cardname = i + ' of Clubs';
         card.src = imageDir + i + '_of_clubs.png';
       deck.push(card);
     } else {
       var card = {};
       if (i == 11) {
-        card.name = "Jack of Clubs";
+        card.cardname = "Jack of Clubs";
         card.src = imageDir + 'jack_of_clubs.png';
       } else if (i == 12) {
-        card.name = "Queen of Clubs";
+        card.cardname = "Queen of Clubs";
         card.src = imageDir + 'queen_of_clubs.png';
       } else if (i == 13) {
-        card.name = "King of Clubs";
+        card.cardname = "King of Clubs";
         card.src = imageDir + 'king_of_clubs.png';
       } else if (i == 14) {
-        card.name = "Ace of Clubs";
+        card.cardname = "Ace of Clubs";
         card.src = imageDir + 'ace_of_clubs.png';
       }
       deck.push(card);
@@ -81,22 +81,22 @@ function initDeck () {
   for (var i = 2; i <= 14; i++) {
     var card = {};
       if (i <= 10) {
-      card.name = i + ' of Diamonds';
+      card.cardname = i + ' of Diamonds';
       card.src = imageDir + i + '_of_diamonds.png'
       deck.push(card);
     } else {
       var card = {};
       if (i == 11) {
-        card.name = "Jack of Diamonds";
+        card.cardname = "Jack of Diamonds";
         card.src = imageDir + "jack_of_diamonds.png";
       } else if (i == 12) {
-        card.name = "Queen of Diamonds";
+        card.cardname = "Queen of Diamonds";
         card.src = imageDir + "queen_of_diamonds.png";
       } else if (i == 13) {
-        card.name = "King of Diamonds";
+        card.cardname = "King of Diamonds";
         card.src = imageDir + "king_of_diamonds.png";
       } else if (i == 14) {
-        card.name = "Ace of Diamonds";
+        card.cardname = "Ace of Diamonds";
         card.src = imageDir + "ace_of_diamonds.png";
       }
       deck.push(card);

@@ -14,26 +14,49 @@ canvas.mousemove(function(e) {
 
 var itemsSelected = [];
 var itemHasBeenSelected = false;
+var putCardOnTop = false;
+var putCardOnBottom = false;
+var cardPutInHand = false;
+var initialY = {
+  y: 0,
+  set: false
+};
 
 $(document).mousedown(function(){
     mousePressed = true;
   }).mouseup(function(){
+
     console.log(itemsSelected);
     itemsSelected = [];
     itemHasBeenSelected = false;
     mousePressed = false;
-    // if (shiftDown) {
-    //   if(itemBeingDragged.faceDown) {
-    //       // itemBeingDragged.img.src = itemBeingDragged.permSrc;
-    //       itemBeingDragged.faceDown = false;
-    //   } else {
-    //       // itemBeingDragged.img.src = "/images/cardback.jpg";
-    //       itemBeingDragged.faceDown = true;
-    //   }
-    // }
-    socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id, shiftDown: shiftDown, owner: itemBeingDragged.owner});
+    if (putCardOnTop){
+      socket.emit('put card on top', window.location.pathname, itemBeingDragged.id, username, itemBeingDragged.cardname, itemBeingDragged.faceDown);
+    } else if (putCardOnBottom) {
+      socket.emit('put card on bottom', window.location.pathname, itemBeingDragged.id, username, itemBeingDragged.cardname, itemBeingDragged.faceDown);
+    } else {
+      socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id, shiftDown: shiftDown, owner: itemBeingDragged.owner});
+    }
+
+    if (cardPutInHand){
+      var msg;
+      if (itemBeingDragged.faceDown === true){
+        msg = "a face down card";
+      } else {
+        msg = itemBeingDragged.cardname;
+      }
+      socket.emit('chat message', window.location.pathname, (username + " put " + msg + " in their hand"));
+    }
+
     socket.emit('store game state', window.location.pathname, cards, deck);
     itemBeingDragged = false;
+    cardPutInHand = false;
+    putCardOnTop = false;
+    putCardOnBottom = false;
+    initialY = {
+      y: 0,
+      set: false
+    };
 });
 var itemBeingDragged = false;
 var shiftDown = false;
@@ -51,16 +74,18 @@ $(document).keyup(function (e) {
 });
 
 
-function DragImage(src, x, y, faceDown, id, owner) {
+function DragImage(src, x, y, faceDown, id, owner, cardname) {
     var that = this;
     var startX = 0, startY = 0;
     var drag = false;
     this.x = x;
     this.y = y;
     this.id = id;
+    this.cardname = cardname;
     this.faceDown = faceDown;
     var img = new Image();
     this.img = img;
+
     img.width = 100 * 1.3;
     img.height = 140 * 1.3;
     if (faceDown === false){
@@ -86,6 +111,10 @@ function DragImage(src, x, y, faceDown, id, owner) {
                 } else {
                   itemBeingDragged = itemsSelected[itemsSelected.length - 1];
                   itemHasBeenSelected = true;
+                  if (!initialY.set){
+                    initialY.set = true;
+                    initialY.y = itemBeingDragged.y;
+                  }
                   startX = mouseX - itemBeingDragged.x;
                   startY = mouseY - itemBeingDragged.y;
                   drag = true;
@@ -97,17 +126,36 @@ function DragImage(src, x, y, faceDown, id, owner) {
         if (drag){
             itemBeingDragged.x = mouseX - startX;
             itemBeingDragged.y = mouseY - startY;
-              if (mouseY > (canvas.height * 0.8)) {
+
+
+              if (mouseY > 240 && mouseY < 390 && mouseX < 150){
+                itemBeingDragged.img.width = 100;
+                itemBeingDragged.img.height = 140;
+                putCardOnTop = true;
+
+              } else if (mouseY > 440 && mouseY < 590 && mouseX < 150) {
+                itemBeingDragged.img.width = 100;
+                itemBeingDragged.img.height = 140;
+                putCardOnBottom = true;
+              }
+
+              else if (mouseY > (canvas.height * 0.8)) {
+                putCardOnTop = false;
+                putCardOnBottom = false;
                 itemBeingDragged.y = canvas.height * 0.83;
-                img.width = 100;
-                img.height = 140;
+                itemBeingDragged.img.width = 100;
+                itemBeingDragged.img.height = 140;
                 itemBeingDragged.owner = username;
-                // console.log("itemBeingDragged.owner = " + itemBeingDragged.owner);
+                if (initialY.y !== itemBeingDragged.y){
+                  console.log(initialY.y + "" + itemBeingDragged.y);
+                  cardPutInHand = true;
+                }
               } else {
-                img.width = 100 * 1.3;
-                img.height = 140 * 1.3;
+                putCardOnTop = false;
+                putCardOnBottom = false;
+                itemBeingDragged.img.width = 100 * 1.3;
+                itemBeingDragged.img.height = 140 * 1.3;
                 itemBeingDragged.owner = false;
-                // console.log("this.owner = " + this.owner);
               }
         }
         if (this.owner === false || this.owner == username){

@@ -33,9 +33,9 @@ io.on('connection', function(socket){
       }
     });
     console.log(socket.user + ' joined ' + roomname);
-    rooms.forEach(function(room){
-      console.log(room);
-    });
+      // rooms.forEach(function(room){
+      //   console.log(room);
+      // });
   });
 
   socket.on('say to room', function(path){
@@ -54,10 +54,28 @@ io.on('connection', function(socket){
     io.sockets.in(path).emit('card movement', data);
   });
 
-  socket.on('draw new card', function(path, card, username){
-    io.sockets.in(path).emit('draw new card', card);
+  socket.on('draw new card', function(path, card, username, xpos, ypos){
+    io.sockets.in(path).emit('draw new card', card, xpos, ypos);
     io.sockets.in(path).emit('chat message', username + " drew a card");
   });
+
+  socket.on('put card on top', function(path, cardid, username, cardname, facedown){
+    io.sockets.in(path).emit('put card on top', cardid);
+    if (facedown) {
+      cardname = "a face down card";
+    }
+    io.sockets.in(path).emit('chat message', username + " put "+ cardname + " on the top of the deck");
+  });
+
+  socket.on('put card on bottom', function(path, card, username, cardname, facedown){
+    io.sockets.in(path).emit('put card on bottom', card);
+    if (facedown) {
+      cardname = "a face down card";
+    }
+    io.sockets.in(path).emit('chat message', username + " put " + cardname + " on the bottom of the deck");
+  });
+
+
 
   socket.on('shuffle and store deck', function(path, deck, username){
     rooms.forEach(function(room){
@@ -79,7 +97,7 @@ io.on('connection', function(socket){
         room.state = state;
         room.deck = deck;
       }
-      console.log(room);
+      // console.log(room);
     });
   });
 
