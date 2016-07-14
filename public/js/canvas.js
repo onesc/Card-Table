@@ -4,13 +4,6 @@ var deckcount = deck.length;
 var XposCounter = 200;
 var YposCounter = 140;
 
-whereX = function(){
-  return XposCounter * 100;
-};
-whereY = function(){
-  return YposCounter * 80;
-};
-
 
 socket.emit('request game state', window.location.pathname);
 socket.on('load state', function(state, roomdeck){
@@ -90,6 +83,13 @@ $("#drawFDButton").click(function(){
 $("#shuffleButton").click(function(){
   for(var j, x, i = deck.length; i; j = parseInt(Math.random() * i), x = deck[--i], deck[i] = deck[j], deck[j] = x);
   socket.emit('shuffle and store deck', window.location.pathname, deck, username);
+});
+
+$("#resetButton").click(function(){
+  deck = initDeck();
+  cards = [];
+  socket.emit('store game state', window.location.pathname, cards, deck);
+  socket.emit('request game state', window.location.pathname);
 });
 
 
