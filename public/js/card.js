@@ -3,7 +3,7 @@
 function initDeck () {
   var imageDir = '/images/cards/';
   var deck = [];
-  for (var i = 1; i <= 14; i++) {
+  for (var i = 2; i <= 14; i++) {
       var card = {};
       if (i <= 10) {
       card.name = i + ' of Hearts';
@@ -28,7 +28,7 @@ function initDeck () {
     }
   }
 
-  for (var i = 1; i <= 14; i++) {
+  for (var i = 2; i <= 14; i++) {
       var card = {};
       if (i <= 10) {
         card.name = i + ' of Spades';
@@ -53,7 +53,7 @@ function initDeck () {
     }
   }
 
-  for (var i = 1; i <= 14; i++) {
+  for (var i = 2; i <= 14; i++) {
     var card = {};
       if (i <= 10) {
         card.name = i + ' of Clubs';
@@ -78,7 +78,7 @@ function initDeck () {
     }
   }
 
-  for (var i = 1; i <= 14; i++) {
+  for (var i = 2; i <= 14; i++) {
     var card = {};
       if (i <= 10) {
       card.name = i + ' of Diamonds';

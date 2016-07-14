@@ -54,11 +54,19 @@ io.on('connection', function(socket){
     io.sockets.in(path).emit('card movement', data);
   });
 
-  socket.on('draw new card', function(path, card){
-    console.log("got inside draw new card on server side");
-    console.log(card);
-    console.log(path);
+  socket.on('draw new card', function(path, card, username){
     io.sockets.in(path).emit('draw new card', card);
+    io.sockets.in(path).emit('chat message', username + " drew a card");
+  });
+
+  socket.on('shuffle and store deck', function(path, deck, username){
+    rooms.forEach(function(room){
+      if (room.path == path){
+        room.deck = deck;
+      }
+    });
+    io.sockets.in(path).emit('load deck', deck);
+    io.sockets.in(path).emit('chat message', username + " shuffled the deck");
   });
 
   socket.on('player join', function(path, username){
@@ -74,6 +82,8 @@ io.on('connection', function(socket){
       console.log(room);
     });
   });
+
+
 
     socket.on('request game state', function(path){
       var stateToGive;
