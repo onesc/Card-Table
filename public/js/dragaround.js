@@ -37,7 +37,7 @@ $(document).mousedown(function(){
     } else {
       socket.emit('card movement', window.location.pathname, {item: itemBeingDragged, x: itemBeingDragged.x, y:itemBeingDragged.y, id: itemBeingDragged.id, shiftDown: shiftDown, owner: itemBeingDragged.owner});
     }
-
+    
     if (cardPutInHand){
       var msg;
       if (itemBeingDragged.faceDown === true){
@@ -109,15 +109,18 @@ function DragImage(src, x, y, faceDown, id, owner, cardname) {
                 if(itemsSelected.length === 0 || that.id !== itemsSelected[0].id) {
                   itemsSelected.push(that);
                 } else {
-                  itemBeingDragged = itemsSelected[itemsSelected.length - 1];
-                  itemHasBeenSelected = true;
-                  if (!initialY.set){
-                    initialY.set = true;
-                    initialY.y = itemBeingDragged.y;
-                  }
-                  startX = mouseX - itemBeingDragged.x;
-                  startY = mouseY - itemBeingDragged.y;
-                  drag = true;
+
+                if (itemsSelected[itemsSelected.length - 1].owner === false || itemsSelected[itemsSelected.length - 1].owner === username) {
+                      itemBeingDragged = itemsSelected[itemsSelected.length - 1];
+                      itemHasBeenSelected = true;
+                      if (!initialY.set){
+                        initialY.set = true;
+                        initialY.y = itemBeingDragged.y;
+                      }
+                      startX = mouseX - itemBeingDragged.x;
+                      startY = mouseY - itemBeingDragged.y;
+                      drag = true;
+                      }
                 }
             }
         }else{
